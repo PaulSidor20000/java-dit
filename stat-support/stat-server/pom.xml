@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.dit</groupId>
+        <artifactId>stat-support</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>stat-server</artifactId>
+
+    <properties>
+        <openapi-yaml>order-service-spec-v${openapi-yaml.version}.yaml</openapi-yaml>
+        <openapi-yaml.version>1.0.0</openapi-yaml.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.dit</groupId>
+            <artifactId>stat-contract</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.dit</groupId>
+            <artifactId>stat-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-server</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/openapi/${openapi-yaml}</inputSpec>
+
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+
+                            <modelPackage>ru.dit.model.order</modelPackage>
+                            <apiPackage>ru.dit.server.order</apiPackage>
+
+
+                            <generateApis>true</generateApis>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+
+                            <configOptions>
+                                <webclientBuilder>true</webclientBuilder>
+                                <interfaceOnly>true</interfaceOnly>
+                                <reactive>true</reactive>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <dateLibrary>java8</dateLibrary>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

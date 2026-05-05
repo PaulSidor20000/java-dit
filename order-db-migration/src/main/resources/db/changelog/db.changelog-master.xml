@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="2026/05/001_create_order_table.xml" relativeToChangelogFile="true"/>
+    <include file="2026/05/002_create_index_by_created_field.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

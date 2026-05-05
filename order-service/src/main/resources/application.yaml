@@ -1,0 +1,41 @@
+server:
+  port: 9089
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:6541/order-db
+    username: postgres
+    password: password
+    pool:
+      enabled: true
+      initial-size: 50
+      max-size: 100
+      max-idle-time: 30m
+
+  sql:
+    init:
+      mode: never
+
+#logging:
+#  level:
+#    io.r2dbc.postgresql: DEBUG
+#    org.springframework.r2dbc: DEBUG
+
+management:
+  server:
+    port: 9090
+  endpoint:
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health
+
+client:
+  mock:
+    url: ${MOCK_CLIENT_URL:localhost}
+    port: ${MOCK_CLIENT_PORT:8080}
+    api:
+      version: ${MOCK_CLIENT_API_VERSION:/api/v1}
+      order: ${MOCK_CLIENT_API_ORDER:/order}
