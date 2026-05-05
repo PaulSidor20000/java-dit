@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2" author="admin" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="ORDERS" columnNames="CREATED" indexName="ORDERS_CREATED_INDEX"/>
+            </not>
+        </preConditions>
+
+        <sql>
+            CREATE INDEX CONCURRENTLY ORDERS_CREATED_INDEX ON ORDERS (CREATED);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

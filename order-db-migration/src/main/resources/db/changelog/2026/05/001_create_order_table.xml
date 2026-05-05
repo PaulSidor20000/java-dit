@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="admin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ORDERS"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="ORDERS">
+            <column name="ID" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" primaryKeyName="PK_ORDERS_ID"/>
+            </column>
+
+            <column name="CREATED" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false" notNullConstraintName="ORDERS_CREATED_NOT_NULL"/>
+            </column>
+
+            <column name="UPDATED" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false" notNullConstraintName="ORDERS_UPDATED_NOT_NULL"/>
+            </column>
+
+            <column name="VERSION" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false" notNullConstraintName="ORDERS_VERSION_NOT_NULL"/>
+            </column>
+
+            <column name="PRODUCT_ID" type="UUID">
+                <constraints nullable="false" notNullConstraintName="ORDERS_PRODUCT_ID_NOT_NULL"/>
+            </column>
+
+            <column name="QUANTITY" type="INT">
+                <constraints nullable="false" notNullConstraintName="ORDERS_QUANTITY_NOT_NULL"/>
+            </column>
+
+            <column name="SHIPPED" type="DATE"/>
+
+            <column name="STATUS" type="varchar(16)" defaultValue="NEW">
+                <constraints nullable="false" notNullConstraintName="ORDERS_STATUS_NOT_NULL"
+                             checkConstraint="STATUS IN ('NEW', 'SHIPPED', 'COMPLETED')"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

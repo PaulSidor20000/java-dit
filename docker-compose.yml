@@ -1,0 +1,107 @@
+version: '3.1'
+services:
+  order-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        MODULE: order-service
+    container_name: order
+    image: order
+    ports:
+      - "9089:9089"
+    depends_on:
+      order-db:
+        condition: service_started
+      mock-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9090/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    restart: always
+    environment:
+      - SPRING_R2DBC_URL=r2dbc:postgresql://order-db:5432/order-db
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=password
+      - MOCK_CLIENT_URL=mock-service
+      - MOCK_CLIENT_PORT=8080
+      - MOCK_CLIENT_API_VERSION=/api/v1
+      - MOCK_CLIENT_API_ORDER=/order
+      - TZ=GMT
+
+  order-db-migration:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        MODULE: order-db-migration
+    container_name: db-migration
+    image: db-migration
+    depends_on:
+      - order-db
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/order-db
+      - SPRING_DATASOURCE_HIKARI_USERNAME=postgres
+      - SPRING_DATASOURCE_HIKARI_PASSWORD=password
+      - TZ=GMT
+
+  order-db:
+    image: postgres:14-alpine
+    container_name: order-db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=order-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - TZ=GMT
+
+  mock-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        MODULE: mock-service
+    container_name: mock
+    image: mock
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    restart: always
+    environment:
+      - TZ=GMT
+
+  grafana-server:
+    build: docker/grafana
+    container_name: grafana-server
+    ports:
+      - "3002:3000"
+
+  prometheus-server:
+    build: docker/prometheus
+    container_name: prometheus-server
+    ports:
+      - "9091:9090"
+
+  k6:
+    image: grafana/k6
+    container_name: k6
+    depends_on:
+      order-service:
+        condition: service_healthy
+      prometheus-server:
+        condition: service_started
+    volumes:
+      - ./docker/k6:/scripts
+    working_dir: /scripts
+    environment:
+      - K6_OUT=experimental-prometheus-rw
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus-server:9090/api/v1/write
+    command: run k6script.js
