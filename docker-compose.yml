@@ -1,4 +1,3 @@
-version: '3.1'
 services:
   order-service:
     build:
@@ -6,21 +5,42 @@ services:
       dockerfile: docker/Dockerfile
       args:
         MODULE: order-service
-    container_name: order
-    image: order
+    container_name: order-service
+    image: order-service
+    ports:
+      - "9080:9080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9081/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/order-db
+      - SPRING_DATASOURCE_HIKARI_USERNAME=postgres
+      - SPRING_DATASOURCE_HIKARI_PASSWORD=password
+      - MOCK_CLIENT_URL=mock-service
+      - MOCK_CLIENT_PORT=8080
+      - MOCK_CLIENT_API_VERSION=/api/v1
+      - MOCK_CLIENT_API_ORDER=/order
+      - TZ=GMT
+
+  order-reactive-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        MODULE: order-reactive-service
+    container_name: order-reactive-service
+    image: order-reactive-service
     ports:
       - "9089:9089"
-    depends_on:
-      order-db:
-        condition: service_started
-      mock-service:
-        condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9090/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 30
-    restart: always
+    restart: on-failure
     environment:
       - SPRING_R2DBC_URL=r2dbc:postgresql://order-db:5432/order-db
       - SPRING_R2DBC_USERNAME=postgres
@@ -40,7 +60,8 @@ services:
     container_name: db-migration
     image: db-migration
     depends_on:
-      - order-db
+      order-db:
+        condition: service_healthy
     restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/order-db
@@ -49,10 +70,17 @@ services:
       - TZ=GMT
 
   order-db:
-    image: postgres:14-alpine
+    image: postgres:18-alpine
     container_name: order-db
     ports:
       - "6541:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d order-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      start_interval: 1s
     environment:
       - POSTGRES_DB=order-db
       - POSTGRES_USER=postgres
@@ -74,7 +102,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 30
-    restart: always
+    restart: on-failure
     environment:
       - TZ=GMT
 
@@ -96,6 +124,14 @@ services:
     depends_on:
       order-service:
         condition: service_healthy
+      order-reactive-service:
+        condition: service_healthy
+      mock-service:
+        condition: service_healthy
+      order-db:
+        condition: service_healthy
+      order-db-migration:
+        condition: service_completed_successfully
       prometheus-server:
         condition: service_started
     volumes:
@@ -104,4 +140,4 @@ services:
     environment:
       - K6_OUT=experimental-prometheus-rw
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus-server:9090/api/v1/write
-    command: run k6script.js
+#    command: run k6script.js

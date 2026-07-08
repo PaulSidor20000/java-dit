@@ -10,7 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import ru.dit.model.order.Order;
 import ru.dit.model.order.OrderResponse;
-import ru.dit.server.order.OrderApi;
+import ru.dit.reactive.server.order.OrderApi;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -37,8 +37,6 @@ public class MockOrderController implements OrderApi {
                                 .rqId(UUID.randomUUID())
                                 .timestamp(now)
                                 .order(new Order().toBuilder()
-                                        .id(UUID.randomUUID())
-                                        .created(now)
                                         .productId(UUID.randomUUID())
                                         .status(statusEnum)
                                         .build())

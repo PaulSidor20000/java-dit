@@ -21,8 +21,9 @@
     <modules>
         <module>order-db-migration</module>
         <module>stat-support</module>
-        <module>order-service</module>
         <module>mock-service</module>
+        <module>order-service</module>
+        <module>order-reactive-service</module>
     </modules>
 
     <properties>
@@ -31,32 +32,28 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <springdoc-openapi-starter-webflux-ui.version>3.0.3</springdoc-openapi-starter-webflux-ui.version>
+        <spring-cloud.version>2025.1.1</spring-cloud.version>
+
         <jaxb.version>2.3.1</jaxb.version>
 
-        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <maven-compiler-plugin>3.8.1</maven-compiler-plugin>
         <lombok-version>1.18.46</lombok-version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-                <version>${springdoc-openapi-starter-webflux-ui.version}</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
                 <version>${jaxb.version}</version>
             </dependency>
 
@@ -91,7 +88,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin}</version>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>

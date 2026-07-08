@@ -7,13 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 import ru.dit.model.order.OrderListResponse;
 import ru.dit.model.order.OrderResponse;
 import ru.dit.order.service.OrderService;
 import ru.dit.server.order.OrderApi;
-import ru.dit.server.order.OrdersApi;
 
 @Slf4j
 @RestController
@@ -26,27 +23,13 @@ public class OrderController implements OrderApi {
     private final OrderService orderService;
 
     @GetMapping("/order")
-    public Mono<ResponseEntity<OrderResponse>> getOrder(ServerWebExchange exchange) {
-        return orderService.getOrder()
-                .map(ResponseEntity::ok)
-                .doOnSuccess(rs -> log.info("Response Order Ok"))
-                .onErrorResume(e -> {
-                    log.error("Request failed", e);
-                    return Mono.just(ResponseEntity.internalServerError().build());
-                });
+    public ResponseEntity<OrderResponse> getOrder() {
+        return ResponseEntity.ok(orderService.getOrder());
     }
 
     @GetMapping("/orders")
-    public Mono<ResponseEntity<OrderListResponse>> getLatestOrders(
-            @RequestParam(defaultValue = DEFAULT_LIMIT) Integer limit,
-            ServerWebExchange exchange
-    ) {
-        return orderService.getOrders(limit)
-                .map(ResponseEntity::ok)
-                .doOnSuccess(rs -> log.info("Response Orders Ok"))
-                .onErrorResume(e -> {
-                    log.error("Request failed", e);
-                    return Mono.just(ResponseEntity.internalServerError().build());
-                });
+    public ResponseEntity<OrderListResponse> getLatestOrders(
+            @RequestParam(defaultValue = DEFAULT_LIMIT) Integer limit) {
+        return ResponseEntity.ok(orderService.getOrders(limit));
     }
 }

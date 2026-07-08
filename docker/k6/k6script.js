@@ -24,9 +24,9 @@ export const options = {
 };
 
 export function createOrder() {
-  http.get('http://order-service:9089/api/v1/order');
+  http.get('http://order-service:9080/api/v1/order');
 }
 
 export function getOrders() {
-  http.get('http://order-service:9089/api/v1/orders');
+  http.get('http://order-service:9080/api/v1/orders');
 }

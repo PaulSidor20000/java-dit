@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stat-client</artifactId>
+    <artifactId>stat-reactive-client</artifactId>
 
     <properties>
         <openapi-yaml>order-service-spec-v${openapi-yaml.version}.yaml</openapi-yaml>
@@ -31,13 +31,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
     </dependencies>
 
@@ -53,30 +63,29 @@
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>generate-client</id>
+                        <id>generate-reactive-client</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.build.directory}/openapi/${openapi-yaml}</inputSpec>
+                            <inputSpec>
+                                ${project.build.directory}/openapi/${openapi-yaml}
+                            </inputSpec>
 
-                            <generatorName>spring</generatorName>
-                            <library>spring-cloud</library>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
 
-                            <apiPackage>ru.dit.client.order</apiPackage>
+                            <apiPackage>ru.dit.reactive.client.order</apiPackage>
                             <modelPackage>ru.dit.model.order</modelPackage>
-                            <invokerPackage>ru.dit.invoker.order</invokerPackage>
+                            <invokerPackage>ru.dit.reactive.invoker.order</invokerPackage>
 
                             <generateApis>true</generateApis>
                             <generateModels>false</generateModels>
 
                             <generateApiTests>false</generateApiTests>
                             <configOptions>
-                                <generateForOpenFeign>true</generateForOpenFeign>
-                                <useFeignClient>true</useFeignClient>
                                 <interfaceOnly>true</interfaceOnly>
-                                <useSpringBoot3>true</useSpringBoot3>
-                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <reactive>true</reactive>
                                 <useJakartaEe>true</useJakartaEe>
                                 <dateLibrary>java8</dateLibrary>
                                 <useBeanValidation>true</useBeanValidation>

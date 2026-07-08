@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.dit.model.order.Order;
-import ru.dit.order.entity.OrderEntity;
+import ru.dit.model.order.OrderResponse;
 import ru.dit.order.mapper.OrderMapper;
 import ru.dit.order.repository.OrderRepository;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,13 +21,17 @@ public class OrderDaoService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public Mono<OrderEntity> saveOrder(OrderEntity entity) {
-        return orderRepository.save(entity);
+    public Order saveOrder(OrderResponse order) {
+        var orderEntity = orderMapper.map(order);
+        var saved = orderRepository.save(orderEntity);
+
+        return orderMapper.map(saved);
     }
 
     @Transactional
-    public Flux<Order> findLastOrdersWithLimit(Integer limit) {
-        return orderRepository.findAllByOrderByCreatedDesc(Pageable.ofSize(limit))
-                .map(orderMapper::map);
+    public List<Order> findLastOrdersWithLimit(Integer limit) {
+        return orderRepository.findAllByOrderByCreatedDesc(Pageable.ofSize(limit)).stream()
+                .map(orderMapper::map)
+                .toList();
     }
 }

@@ -1,26 +1,30 @@
 package ru.dit.order.entity;
 
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
+@MappedSuperclass
 public class CommonEntity {
 
     @Id
+    @UuidGenerator
     private UUID id;
 
-    @CreatedDate
+    @CreationTimestamp
     private OffsetDateTime created;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     private OffsetDateTime updated;
 
     @Version

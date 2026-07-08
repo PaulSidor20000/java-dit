@@ -1,13 +1,13 @@
 package ru.dit.order.repository;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
-import reactor.core.publisher.Flux;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.dit.order.entity.OrderEntity;
 
+import java.util.List;
 import java.util.UUID;
 
-public interface OrderRepository extends R2dbcRepository<OrderEntity, UUID> {
+public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
 
-    Flux<OrderEntity> findAllByOrderByCreatedDesc(Pageable pageable);
+    List<OrderEntity> findAllByOrderByCreatedDesc(Pageable pageable);
 }

@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stat-client</artifactId>
+    <artifactId>stat-reactive-server</artifactId>
 
     <properties>
         <openapi-yaml>order-service-spec-v${openapi-yaml.version}.yaml</openapi-yaml>
@@ -32,12 +32,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
     </dependencies>
 
@@ -53,7 +48,7 @@
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>generate-client</id>
+                        <id>generate-server</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -61,25 +56,22 @@
                             <inputSpec>${project.build.directory}/openapi/${openapi-yaml}</inputSpec>
 
                             <generatorName>spring</generatorName>
-                            <library>spring-cloud</library>
+                            <library>spring-boot</library>
 
-                            <apiPackage>ru.dit.client.order</apiPackage>
                             <modelPackage>ru.dit.model.order</modelPackage>
-                            <invokerPackage>ru.dit.invoker.order</invokerPackage>
+                            <apiPackage>ru.dit.reactive.server.order</apiPackage>
+
 
                             <generateApis>true</generateApis>
                             <generateModels>false</generateModels>
+                            <generateSupportingFiles>true</generateSupportingFiles>
 
-                            <generateApiTests>false</generateApiTests>
                             <configOptions>
-                                <generateForOpenFeign>true</generateForOpenFeign>
-                                <useFeignClient>true</useFeignClient>
+                                <webclientBuilder>true</webclientBuilder>
                                 <interfaceOnly>true</interfaceOnly>
+                                <reactive>true</reactive>
                                 <useSpringBoot3>true</useSpringBoot3>
-                                <skipDefaultInterface>true</skipDefaultInterface>
-                                <useJakartaEe>true</useJakartaEe>
                                 <dateLibrary>java8</dateLibrary>
-                                <useBeanValidation>true</useBeanValidation>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -87,5 +79,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

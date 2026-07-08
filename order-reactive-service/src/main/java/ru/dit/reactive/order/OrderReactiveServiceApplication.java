@@ -1,4 +1,4 @@
-package ru.dit.order;
+package ru.dit.reactive.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,17 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 
 @Slf4j
 @RequiredArgsConstructor
 @SpringBootApplication
-public class OrderServiceApplication {
+public class OrderReactiveServiceApplication {
 
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     public static void main(String[] args) {
-        SpringApplication.run(OrderServiceApplication.class, args);
+        SpringApplication.run(OrderReactiveServiceApplication.class, args);
     }
 
     @EventListener(ApplicationReadyEvent.class)

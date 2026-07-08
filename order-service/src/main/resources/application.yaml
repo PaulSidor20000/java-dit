@@ -1,29 +1,75 @@
 server:
-  port: 9089
+  port: 9080
+  shutdown: graceful
+  tomcat:
+      threads:
+        max: 300
+        min-spare: 200
+        max-queue-capacity: 10000
 
 spring:
-  r2dbc:
-    url: r2dbc:postgresql://localhost:6541/order-db
-    username: postgres
-    password: password
-    pool:
+  threads:
+    virtual:
       enabled: true
-      initial-size: 50
-      max-size: 100
-      max-idle-time: 30m
+
+  datasource:
+    url: jdbc:postgresql://localhost:6541/order-db
+    hikari:
+      username: postgres
+      password: password
+      driver-class-name: org.postgresql.Driver
+      minimum-idle: 15
+      maximum-pool-size: 50
+#      connection-timeout: 30000
+#      idle-timeout: 600000
+#      max-lifetime: 1800000
+
+  cloud:
+    openfeign:
+      httpclient:
+        hc5:
+          enabled: true
+          max-connections: 200
+          max-connections-per-route: 50
+          socket-timeout: 5
+        connection-timeout: 2
+        time-to-live: 30
+        time-to-live-unit: seconds
+      client:
+        config:
+          default:
+            connectTimeout: 2000
+            readTimeout: 5000
+            loggerLevel: basic
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        generate_statistics: true
+        cache:
+          use_second_level_cache: false
+          region.factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+        default_batch_fetch_size: 20
 
   sql:
     init:
       mode: never
 
-#logging:
-#  level:
+logging:
+  level:
+    org.springframework.cloud.openfeign: DEBUG
 #    io.r2dbc.postgresql: DEBUG
 #    org.springframework.r2dbc: DEBUG
 
 management:
   server:
-    port: 9090
+    port: 9081
   endpoint:
     prometheus:
       enabled: true

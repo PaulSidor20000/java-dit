@@ -12,9 +12,12 @@ COPY stat-support/pom.xml stat-support/pom.xml
 COPY stat-support/stat-contract/pom.xml stat-support/stat-contract/pom.xml
 COPY stat-support/stat-model/pom.xml stat-support/stat-model/pom.xml
 COPY stat-support/stat-client/pom.xml stat-support/stat-client/pom.xml
+COPY stat-support/stat-reactive-client/pom.xml stat-support/stat-reactive-client/pom.xml
 COPY stat-support/stat-server/pom.xml stat-support/stat-server/pom.xml
+COPY stat-support/stat-reactive-server/pom.xml stat-support/stat-reactive-server/pom.xml
 COPY order-db-migration/pom.xml order-db-migration/pom.xml
 COPY order-service/pom.xml order-service/pom.xml
+COPY order-reactive-service/pom.xml order-reactive-service/pom.xml
 COPY mock-service/pom.xml mock-service/pom.xml
 
 # 2. Качаем зависимости

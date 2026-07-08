@@ -20,7 +20,9 @@
         <module>stat-contract</module>
         <module>stat-model</module>
         <module>stat-client</module>
+        <module>stat-reactive-client</module>
         <module>stat-server</module>
+        <module>stat-reactive-server</module>
     </modules>
 
     <properties>

@@ -1,21 +1,19 @@
-package ru.dit.order.entity;
+package ru.dit.reactive.order.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Entity
 @Table(name = "orders")
 public class OrderEntity extends CommonEntity {
 
-    @Column(name = "product_id")
+    @Column("product_id")
     private UUID productId;
 
     private Integer quantity;
