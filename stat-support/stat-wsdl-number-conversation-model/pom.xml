@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.dit</groupId>
+        <artifactId>stat-support</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>stat-wsdl-number-conversation-model</artifactId>
+
+    <properties>
+        <spec-wsdl>number-conversion-spec-v${spec-wsdl.version}.wsdl</spec-wsdl>
+        <spec-wsdl.version>1.0.0</spec-wsdl.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.dit</groupId>
+            <artifactId>stat-contract</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${project.build.directory}/soap/${spec-wsdl}</wsdl>
+
+                                    <extraargs>
+                                        <extraarg>-verbose</extraarg>
+                                        <extraarg>-validate</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

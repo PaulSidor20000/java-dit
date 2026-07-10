@@ -23,14 +23,17 @@
         <module>stat-reactive-client</module>
         <module>stat-server</module>
         <module>stat-reactive-server</module>
+        <module>stat-wsdl-number-conversation-model</module>
     </modules>
 
     <properties>
         <maven.dependency.plugin.version>3.10.0</maven.dependency.plugin.version>
         <openapi-generator.version>7.22.0</openapi-generator.version>
+        <cxf-codegen-plugin.version>4.2.2</cxf-codegen-plugin.version>
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
         <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
         <jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
+        <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +67,12 @@
                 <artifactId>jackson-databind-nullable</artifactId>
                 <version>${jackson-databind-nullable.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
+                <version>${jakarta.xml.ws-api.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -87,8 +96,8 @@
                                         <groupId>${project.groupId}</groupId>
                                         <artifactId>stat-contract</artifactId>
                                         <version>${project.version}</version>
-                                        <includes>**/*.yaml</includes>
-                                        <outputDirectory>${project.build.directory}/openapi</outputDirectory>
+                                        <includes>**/*</includes>
+                                        <outputDirectory>${project.build.directory}</outputDirectory>
                                     </artifactItem>
                                 </artifactItems>
                             </configuration>
@@ -100,6 +109,12 @@
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
                     <version>${openapi-generator.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-codegen-plugin</artifactId>
+                    <version>${cxf-codegen-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -18,7 +18,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.yaml</include>
+                    <include>**/*</include>
                 </includes>
             </resource>
         </resources>
